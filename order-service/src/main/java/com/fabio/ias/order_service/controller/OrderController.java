@@ -1,26 +1,17 @@
 package com.fabio.ias.order_service.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import com.fabio.ias.order_service.domain.*;
 import com.fabio.ias.order_service.dto.CreateOrderRequest;
-import com.fabio.ias.order_service.dto.OrderResponse;
 import com.fabio.ias.order_service.service.OrderService;
-
 import jakarta.validation.Valid;
 
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -30,15 +21,25 @@ public class OrderController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<OrderResponse>> create(@Valid @RequestBody CreateOrderRequest request) {
+    public Mono<ResponseEntity<Order>> create(@Valid @RequestBody CreateOrderRequest request) {
         return orderService.createOrder(request.requestId(), request.productId(), request.quantity())
-                .map(order -> ResponseEntity.status(HttpStatus.CREATED).body(OrderResponse.from(order)));
+                .map(order -> ResponseEntity.status(HttpStatus.CREATED).body(order));
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<OrderResponse>> getById(@PathVariable Long id) {
+    public Mono<ResponseEntity<Order>> getOrderById(@PathVariable Long id) {
         return orderService.getOrder(id)
-                .map(order -> ResponseEntity.ok(OrderResponse.from(order)));
+                .map(ResponseEntity::ok);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public Mono<ResponseEntity<Order>> cancel(@PathVariable Long id) {
+        return orderService.cancelOrder(id).map(ResponseEntity::ok);
+    }
+
+    @PostMapping("/{id}/process")
+    public Mono<ResponseEntity<Order>> process(@PathVariable Long id) {
+        return orderService.processExternal(id).map(ResponseEntity::ok);
     }
 
 }

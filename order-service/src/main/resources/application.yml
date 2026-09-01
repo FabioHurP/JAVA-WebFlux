@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: order-service
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/purchase_orders
+    username: postgres
+    password: 123
+  flyway:
+    url: jdbc:postgresql://localhost:5432/purchase_orders
+    user: postgres
+    password: 123
+logging:
+  level:
+    org.flywaydb: DEBUG
+    org.springframework.boot.autoconfigure.flyway: DEBUG
+server:
+  port: ${SERVER_PORT:8080}
+preparation:
+  simulator:
+    delay-ms: ${PREPARATION_DELAY_MS:150}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

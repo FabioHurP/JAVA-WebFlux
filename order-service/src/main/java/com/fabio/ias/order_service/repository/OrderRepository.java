@@ -6,6 +6,6 @@ import reactor.core.publisher.Mono;
 
 public interface OrderRepository extends ReactiveCrudRepository<Order, Long> {
 
-    Mono<Order>  findByRequstId(String requestId);
+    Mono<Order>  findByRequestId(String requestId);
 
 }

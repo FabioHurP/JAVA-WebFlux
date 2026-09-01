@@ -12,7 +12,7 @@ import com.fabio.ias.order_service.repository.ProductRepository;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductRepository productRepository;
